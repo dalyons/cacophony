@@ -1,0 +1,5 @@
+#!/usr/bin/ruby
+
+require 'cacophony'
+
+puts 'test noise'
