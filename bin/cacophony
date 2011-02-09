@@ -1,5 +1,67 @@
 #!/usr/bin/ruby
 
+require 'yaml'
+require 'trollop'
+require 'fcntl'
+
 require 'cacophony'
 
-puts 'test noise'
+#resolve symlinks FIX WHEN IN GEM
+THIS_FILE = File.symlink?(__FILE__) ? File.readlink(__FILE__) : __FILE__
+GEM_PATH = File.join('..','lib',File.dirname(THIS_FILE) )
+
+RESULTS_SIZE = 50
+DEFAULT_TITLE = 'Cacophony Notifier'
+DEFAULT_MSG = 'Task finished!'
+
+DEFAULT_CONF_PATH = '~/.cacophony'
+
+opts = Trollop::options do 
+  version "Cacophony v#{Cacophony::VERSION}(c) 2011 David Lyons"
+  banner <<-EOS
+Cacophony is a small program that broadcasts notifications via a variety of mechanisms, such as growl, email and twitter.
+It is great for notifiying you(or others) when a long running task is complete.
+It operates as a standalone executable, and it also can read from STDIN to pipe output from your tasks to the notifiers.
+The various notifiers are configured in #{DEFAULT_CONF_PATH}, or via a config file passed via -c option.
+
+Usage:
+    cacophony [-options] [message]
+
+Examples:
+    ./long_task_is_long | cacophony 
+    ./long_task_is_long | cacophony -t 'job output:'
+    ./long_task_is_long && cacophony -m 'coffee break over'
+  
+Options:
+
+EOS
+  opt :message, "The message to send via the notifiers", :short => 'm', :type => String, :default => DEFAULT_MSG
+  opt :title, "The title/subject to attach to messages", :short => 't', :type => String, :default => DEFAULT_TITLE
+  opt :conf_file, "Alternate location of config file (default: ~/.cacophony)", :short => 'c', :type => String
+end
+Trollop::die :conf_file, "must exist(try creating  ~/.cacophony)" unless File.exist?(opts[:conf_file]) if opts[:conf_file]
+
+CONF_FILE_PATH = opts[:conf_file] || File.join(File.expand_path('~'), '.cacophony')
+begin
+  CONFIG = YAML.load_file(CONF_FILE_PATH)
+rescue
+  Trollop::die "could not load config file: #{CONF_FILE_PATH}"
+end
+
+output = []
+
+
+if STDIN.fcntl(Fcntl::F_GETFL, 0) == 0
+  ARGF.each do |line| 
+    puts line
+    output << line
+  end
+else
+  #output << ''
+end
+
+message = (opts[:message] == DEFAULT_MSG && m =  ARGV.shift) ? m : opts[:message]
+title = opts[:title]
+
+notifer = Cacophony::Notifier.new(CONFIG)
+notifer.notify(title, message, output)
