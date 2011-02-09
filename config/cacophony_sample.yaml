@@ -1,0 +1,19 @@
+#Cacophony sample config.
+#Each availible notifier type is listed here, along with its options.
+#To enable a notifier, uncomment it and set the options you require.
+
+##Growl notifer uses growl. 
+##Please ensure 'Listen for availible notifications' and 'allow remote application registration' are ticked in System Preferences->Growl.
+#growl_notifier:
+#  use_growl_gem: false   
+#  sticky: true
+
+##Email notifier sends emails, below is a sample config for sending via gmail
+#email_notifier:
+#  server: smtp.gmail.com
+#  port: 587
+#  tls: true
+#  username: USERNAME
+#  password: PASSWORD
+#  to_address: [addy1@gmail.com, addy2@somewhere.com]
+#  from_address: cacophony@test.com
