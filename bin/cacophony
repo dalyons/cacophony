@@ -3,6 +3,7 @@
 require 'yaml'
 require 'trollop'
 require 'fcntl'
+require 'fileutils'
 
 require 'cacophony'
 
@@ -37,9 +38,21 @@ Options:
 EOS
   opt :message, "The message to send via the notifiers", :short => 'm', :type => String, :default => DEFAULT_MSG
   opt :title, "The title/subject to attach to messages", :short => 't', :type => String, :default => DEFAULT_TITLE
-  opt :conf_file, "Alternate location of config file (default: ~/.cacophony)", :short => 'c', :type => String
+  opt :conf_file, "Alternate location of config file (default: #{DEFAULT_CONF_PATH})", :short => 'c', :type => String
 end
-Trollop::die :conf_file, "must exist(try creating  ~/.cacophony)" unless File.exist?(opts[:conf_file]) if opts[:conf_file]
+Trollop::die :conf_file, "must exist" unless File.exist?(opts[:conf_file]) if opts[:conf_file]
+
+unless opts[:conf_file] || File.exist?(File.expand_path(DEFAULT_CONF_PATH))
+  puts "No cacophony config file found at #{DEFAULT_CONF_PATH}."
+  print "Would you like me to create a sample config file at #{DEFAULT_CONF_PATH} for you? (y/n):"
+  if $stdin.getc == 'y'
+    puts "Copying sample to #{DEFAULT_CONF_PATH}."
+    FileUtils.cp(File.join(File.dirname(THIS_FILE), '..', 'config', 'cacophony_sample.yaml'), File.expand_path(DEFAULT_CONF_PATH))
+    puts "Please edit this file to configure cacophony, and run again."
+    exit
+  end
+end
+
 
 CONF_FILE_PATH = opts[:conf_file] || File.join(File.expand_path('~'), '.cacophony')
 begin
