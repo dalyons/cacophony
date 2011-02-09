@@ -8,9 +8,12 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Dave Lyons"]
   s.email       = ["dalyons@gmail.com"]
-  s.homepage    = "http://www.loadedfingers.com"
+  s.homepage    = "https://github.com/dalyons/cacophony"
   s.summary     = %q{Broadcast messages from programs and the command line}
-  s.description = %q{see summary}
+  s.description = %q{Cacophony is a small program that broadcasts notifications via a variety of mechanisms, such as growl, email and twitter.
+It is great for notifiying you(or others) when a long running task is complete.
+It operates as a standalone executable, and it also can read from STDIN to pipe output from your tasks to the notifiers.
+}
 
   #s.rubyforge_project = "cacophony"
 
