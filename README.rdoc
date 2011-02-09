@@ -19,6 +19,8 @@ The various notifiers are configured in ~/.cacophony, or via a config file passe
 
     sudo gem install cacophony
 
+Running cacophony for the first time will prompt you to create a sample configuration file, which you can edit as appropriate.
+
 == Usage
 
 Some examples:
