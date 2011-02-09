@@ -1,0 +1,33 @@
+= Cacophony notifier
+
+* Author: David Lyons (http://loadedfingers.com)
+
+== Caco-whatsie?
+
+Cacophony is a small program that broadcasts notifications via a variety of mechanisms, such as growl, email and twitter.
+It is great for notifiying you(or others) when a long running task is complete.
+It operates as a standalone executable, and it also can read from STDIN to pipe output from your tasks to the notifiers.
+The various notifiers are configured in ~/.cacophony, or via a config file passed via -c option.
+
+== Requirements
+
+* ruby 1.9.x
+* trollop
+* Growl (if you want growl notifications)
+
+== Install
+
+    sudo gem install cacophony
+
+== Usage
+
+Some examples:
+
+    cacophony -m 'just a message'
+    ./long_task_is_long | cacophony 
+    ./long_task_is_long | cacophony -t 'job output:'
+    ./long_task_is_long && cacophony -m 'coffee break over'
+
+
+== Developers
+You can add customer notifiers by adding a class to lib/notifiers/. They must follow the naming pattern xNotifier, copy one of the existing classes for method signatures.
