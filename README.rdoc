@@ -4,9 +4,8 @@
 
 == Caco-whatsie?
 
-Cacophony is a small program that broadcasts notifications via a variety of mechanisms, such as growl, email and twitter.
-It is great for notifiying you(or others) when a long running task is complete.
-It operates as a standalone executable, and it also can read from STDIN to pipe output from your tasks to the notifiers.
+Cacophony is a small library that broadcasts notifications via a variety of mechanisms, such as growl, email and twitter. All instances of cacophony can share a configuration file, which can be used to centralise notification configfuration for a variety of applications. Thus, you can manage the way notifications are sent from all applications from one config file. 
+It also comes with a command line executable which is great for notifiying you(or others) when a long running task is complete. It operates as a standalone executable, and it also can read from STDIN to pipe output from your tasks to the notifiers.
 The various notifiers are configured in ~/.cacophony, or via a config file passed via -c option.
 
 == Requirements
@@ -21,7 +20,20 @@ The various notifiers are configured in ~/.cacophony, or via a config file passe
 
 Running cacophony for the first time will prompt you to create a sample configuration file, which you can edit as appropriate.
 
-== Usage
+== Usage - Ruby library
+
+Some examples:
+
+    notifier = Cacophony::Notifier.new   #defaults to reading config from ~/.cacophony
+    notifier.notifiy('Witty title', 'informative message')
+
+    notifier = Cacophony::Notifier.new('~/.alternative_config_file')
+    notifier.notifiy('Witty title', 'informative message')
+
+    notifier = Cacophony::Notifier.new({:growl_notifier => {...}})  #pass config hash directly.
+    notifier.notifiy('Witty title', 'informative message')
+
+== Usage - Command line
 
 Some examples:
 
